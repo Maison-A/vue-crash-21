@@ -1,21 +1,23 @@
+<!---------    MAIN       --------->
 <template>
-  <div id="app">
-    
-    <h1>Hello World </h1>
+  <div class="container">    
+    <Header title="Task Tracker"/>
   </div>
 </template>
 
+<!---------    SCRIPT       --------->
 <script>
-
+import Header from './components/Header'
 
 export default {
   name: 'App',
   components: {
-    
-  }//
+    Header
+  },
 }
 </script>
 
+<!---------    STYLE       --------->
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
 * {
