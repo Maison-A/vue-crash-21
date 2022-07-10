@@ -50,12 +50,14 @@ export default {
     const data = await res.json()
       this.tasks=[...this.tasks, data]
     },
-    deleteTask(id)
+    async deleteTask(id)
     {
       if(confirm('Are you sure?')){
         // filter is a high level array method, this will only return
         // tasks that that are not the tasks that are being filterd 
-        this.tasks=this.tasks.filter((task)=>task.id !== id)
+        const res = await fetch(`api/tasks/${id}`,
+        {method: 'DELETE'})
+        res.status == 200 ? (this.tasks=this.tasks.filter((task)=>task.id !== id)) : alert('ERROR DELETING TASK')        
 
       }
     },
