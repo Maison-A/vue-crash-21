@@ -1,107 +1,41 @@
 <!---------    MAIN       --------->
 <template>
   <div class="container">    
-    <Header @toggle-add-task="toggleAddTask" 
-    title="Task Tracker"
-    :showAddTask="showAddTask"/>
-   
-   <div v-show="showAddTask">
-      <AddTask @add-task="addTask" />
-    </div>
-   
-   <!--vbind the tasks to the tasks data in order to ensure its dynamic-->
-   <Tasks @toggle-reminder="toggleReminder"
-    @delete-task="deleteTask" :tasks="tasks"/>
+    <Header
+      @toggle-add-task="toggleAddTask"
+      title="Task Tracker"      
+      :showAddTask="showAddTask"
+    />
+    <router-view :showAddTask="showAddTask"></router-view>
+    <Footer />
+  
   </div>
+  
 </template>
 
 <!---------    SCRIPT       --------->
 <script>
 import Header from './components/Header'
-import Tasks from './components/Tasks'
-import AddTask from './components/AddTask'
-
+import Footer from './components/Footer'
 export default {
   name: 'App',
   components: {
     Header,
-    Tasks,
-    AddTask
+    Footer,
   },
-  data(){
-    return{
-      // use a life cycle method
-      tasks: [],
-      showAddTask: false
+  data() {
+    return {
+      showAddTask: false,
     }
   },
-  methods:
-  {
-    toggleAddTask(){
+  methods: {
+    toggleAddTask() {
       this.showAddTask = !this.showAddTask
     },
-   async addTask(task){
-    const res = await fetch('api/tasks',{method: 'POST',
-   
-   headers:{
-      'Content-type': 'application/json',      
-    },
-    body: JSON.stringify(task)})
-    const data = await res.json()
-      this.tasks=[...this.tasks, data]
-    },
-    async deleteTask(id)
-    {
-      if(confirm('Are you sure?')){
-        // filter is a high level array method, this will only return
-        // tasks that that are not the tasks that are being filterd 
-        const res = await fetch(`api/tasks/${id}`,
-        {method: 'DELETE'})
-        res.status == 200 ? (this.tasks=this.tasks.filter((task)=>task.id !== id)) : alert('ERROR DELETING TASK')        
-
-      }
-    },
-    async toggleReminder(id){
-      const taskToToggle = await this.fetchTask(id)
-      const updTask = {...taskToToggle, reminder: !taskToToggle.reminder}
-
-      const res = await fetch(`api/tasks/${id}`,{
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify(updTask)})
-
-      const data = await res.json()
-
-      //map conditional. check if proper id is passed, then return array of objects
-      // where initial task properties are left but change the reminder to the opposite of 
-      // its current value
-      this.tasks = this.tasks.map((task)=> 
-      task.id === id ? {...task, reminder: data.reminder} 
-      : task)
-    },
-    async fetchTasks()
-    {
-      const res = await fetch('api/tasks')
-      const data = await res.json()
-      return data
-    },
-    
-    async fetchTask(id)
-    {
-      const res = await fetch(`api/tasks/${id}`)
-      const data = await res.json()
-      return data
-    }
   },
-  async created()
-  {
-    // wait for promise
-    this.tasks = await this.fetchTasks()
-  }
 }
 </script>
+
 
 <!---------    STYLE       --------->
 <style>
