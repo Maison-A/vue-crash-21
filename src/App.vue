@@ -44,9 +44,9 @@ export default {
     const res = await fetch('api/tasks',{method: 'POST',
    
    headers:{
-      'Content-type': 'application/json',
-      body: JSON.stringify(task)
-    }})
+      'Content-type': 'application/json',      
+    },
+    body: JSON.stringify(task)})
     const data = await res.json()
       this.tasks=[...this.tasks, data]
     },
